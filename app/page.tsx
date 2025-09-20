@@ -21,10 +21,13 @@ import {
   Star,
   Award,
   TrendingUp,
+  UserPlus,
+  LogOut,
 } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import { motion } from "framer-motion"
+import { useAuth } from "@/contexts/AuthContext"
 
 // Animation variants
 const fadeInUp = {
@@ -44,6 +47,13 @@ const staggerContainer = {
 
 export default function LegalAILanding() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { user, logout } = useAuth()
+
+  const handleAuthAction = () => {
+    if (user) {
+      logout()
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -81,9 +91,40 @@ export default function LegalAILanding() {
               About
             </a>
           </nav>
-          <Button variant="outline" className="hidden md:inline-flex glass-card border-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-white">
-            Sign In
-          </Button>
+          <div className="hidden md:flex items-center space-x-3">
+            {user ? (
+              <div className="flex items-center space-x-3">
+                <span className="text-white/80 text-sm">
+                  Welcome, {user.displayName || user.email}
+                </span>
+                <Button 
+                  variant="outline" 
+                  className="glass-card border-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-white"
+                  onClick={handleAuthAction}
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <>
+                <Link href="/sign-up">
+                  <Button 
+                    variant="outline" 
+                    className="glass-card border-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-white"
+                  >
+                    <UserPlus className="h-4 w-4 mr-2" />
+                    Sign Up
+                  </Button>
+                </Link>
+                <Link href="/sign-in">
+                  <Button variant="outline" className="glass-card border-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-white">
+                    Sign In
+                  </Button>
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </motion.header>
 
@@ -127,25 +168,27 @@ export default function LegalAILanding() {
             transition={{ duration: 0.6, delay: 0.6 }}
           >
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="group">
-              <Button size="lg" className="text-lg px-8 py-6 overflow-hidden relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-500/25">
-                <motion.span
-                  className="flex items-center"
-                  whileHover={{ x: -8 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                >
-                  Get Started
-                  <motion.div
-                    whileHover={{
-                      scale: 1.4,
-                      x: 8,
-                      scaleX: 1.6,
-                    }}
+              <Link href="/sign-up">
+                <Button size="lg" className="text-lg px-8 py-6 overflow-hidden relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-500/25">
+                  <motion.span
+                    className="flex items-center"
+                    whileHover={{ x: -8 }}
                     transition={{ type: "spring", stiffness: 400, damping: 25 }}
                   >
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </motion.div>
-                </motion.span>
-              </Button>
+                    Get Started
+                    <motion.div
+                      whileHover={{
+                        scale: 1.4,
+                        x: 8,
+                        scaleX: 1.6,
+                      }}
+                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                    >
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </motion.div>
+                  </motion.span>
+                </Button>
+              </Link>
             </motion.div>
             <Button variant="outline" size="lg" className="text-lg px-8 py-6 glass-card border-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-white">
               Watch Demo
