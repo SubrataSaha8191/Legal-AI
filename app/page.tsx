@@ -73,9 +73,7 @@ export default function LegalAILanding() {
             >
               Analyze Report
             </Link>
-            <Link href="/dashboard" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
-              Dashboard
-            </Link>
+           
             <Link
               href="/chatbot"
               className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"

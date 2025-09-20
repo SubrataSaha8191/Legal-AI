@@ -36,6 +36,7 @@ interface Message {
   sender: 'user' | 'bot';
   timestamp: Date;
   type?: 'text' | 'suggestion';
+  time: string; // preformatted, deterministic time string to avoid SSR/CSR mismatch
 }
 
 const quickSuggestions = [
@@ -48,16 +49,29 @@ const quickSuggestions = [
 ];
 
 export default function ChatbotPage() {
+  // Deterministic, locale-independent time formatter to prevent hydration mismatch
+  const formatTime = (d: Date) => {
+    const h = d.getHours();
+    const hour12 = ((h + 11) % 12) + 1; // 0 -> 12, 13 -> 1, etc.
+    const m = d.getMinutes().toString().padStart(2, '0');
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    return `${hour12.toString().padStart(2,'0')}:${m} ${ampm}`; // Always uppercase & zero-padded
+  };
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       content: "Hello! I'm your Legal AI Assistant. I can help you understand legal documents, explain legal terms, and provide guidance on various legal matters. How can I assist you today?",
       sender: 'bot',
-      timestamp: new Date()
+      timestamp: new Date(),
+      time: formatTime(new Date())
     }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [likedMessages, setLikedMessages] = useState<Set<string>>(new Set());
+  const [dislikedMessages, setDislikedMessages] = useState<Set<string>>(new Set());
+  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -68,6 +82,65 @@ export default function ChatbotPage() {
     scrollToBottom();
   }, [messages]);
 
+  // Handle copying message content to clipboard
+  const handleCopyMessage = async (messageId: string, content: string) => {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopiedMessageId(messageId);
+      // Reset the copied state after 2 seconds
+      setTimeout(() => setCopiedMessageId(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = content;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopiedMessageId(messageId);
+      setTimeout(() => setCopiedMessageId(null), 2000);
+    }
+  };
+
+  // Handle liking a message
+  const handleLikeMessage = (messageId: string) => {
+    setLikedMessages(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(messageId)) {
+        newSet.delete(messageId);
+      } else {
+        newSet.add(messageId);
+        // Remove from disliked if it was disliked
+        setDislikedMessages(prevDisliked => {
+          const newDislikedSet = new Set(prevDisliked);
+          newDislikedSet.delete(messageId);
+          return newDislikedSet;
+        });
+      }
+      return newSet;
+    });
+  };
+
+  // Handle disliking a message
+  const handleDislikeMessage = (messageId: string) => {
+    setDislikedMessages(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(messageId)) {
+        newSet.delete(messageId);
+      } else {
+        newSet.add(messageId);
+        // Remove from liked if it was liked
+        setLikedMessages(prevLiked => {
+          const newLikedSet = new Set(prevLiked);
+          newLikedSet.delete(messageId);
+          return newLikedSet;
+        });
+      }
+      return newSet;
+    });
+  };
+
   const handleSendMessage = async (content: string) => {
     if (!content.trim()) return;
 
@@ -75,25 +148,60 @@ export default function ChatbotPage() {
       id: Date.now().toString(),
       content,
       sender: 'user',
-      timestamp: new Date()
+      timestamp: new Date(),
+      time: formatTime(new Date())
     };
 
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
 
-    setTimeout(() => {
+    try {
+      // Call the real Gemini API instead of mock response
+      const response = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: content }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
-        content: generateResponse(content),
+        content: data.response || "I apologize, but I couldn't process your request at the moment.",
         sender: 'bot',
-        timestamp: new Date()
+        timestamp: new Date(),
+        time: formatTime(new Date())
       };
+      
       setMessages(prev => [...prev, botResponse]);
+    } catch (error) {
+      console.error('Error calling Gemini API:', error);
+      
+      // Fallback response on API failure
+      const errorResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "I'm sorry, I'm experiencing technical difficulties. Please try again in a moment. In the meantime, you can try rephrasing your question or contact support if the issue persists.",
+        sender: 'bot',
+        timestamp: new Date(),
+        time: formatTime(new Date())
+      };
+      
+      setMessages(prev => [...prev, errorResponse]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
+  // This function is now unused since we're using the real API
+  // Keeping it commented for reference in case we need fallback logic
+  /*
   const generateResponse = (userInput: string): string => {
     const lowerInput = userInput.toLowerCase();
     
@@ -115,6 +223,7 @@ export default function ChatbotPage() {
     
     return "Thank you for your question about legal matters. Based on your query, I recommend: 1) Consulting relevant legal documentation, 2) Reviewing applicable laws and regulations, 3) Considering the specific context of your situation, and 4) Seeking professional legal advice for complex matters. Legal issues often require careful analysis of specific facts and circumstances. Would you like me to elaborate on any particular aspect?";
   };
+  */
 
   const handleSuggestionClick = (suggestion: string) => {
     handleSendMessage(suggestion);
@@ -204,17 +313,39 @@ export default function ChatbotPage() {
                         
                         <div className={`flex items-center mt-2 space-x-2 ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                           <span className="text-xs text-gray-500 dark:text-gray-400">
-                            {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            {message.time}
                           </span>
                           {message.sender === 'bot' && (
                             <div className="flex items-center space-x-1">
-                              <Button variant="ghost" size="sm" className="p-1 h-6 w-6 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                <Copy className="h-3 w-3" />
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="p-1 h-6 w-6 hover:bg-gray-100 dark:hover:bg-gray-600"
+                                onClick={() => handleCopyMessage(message.id, message.content)}
+                                title={copiedMessageId === message.id ? "Copied!" : "Copy message"}
+                              >
+                                <Copy className={`h-3 w-3 ${copiedMessageId === message.id ? 'text-green-600' : ''}`} />
                               </Button>
-                              <Button variant="ghost" size="sm" className="p-1 h-6 w-6 hover:bg-gray-100 dark:hover:bg-gray-600">
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className={`p-1 h-6 w-6 hover:bg-gray-100 dark:hover:bg-gray-600 ${
+                                  likedMessages.has(message.id) ? 'text-green-600' : ''
+                                }`}
+                                onClick={() => handleLikeMessage(message.id)}
+                                title="Like this response"
+                              >
                                 <ThumbsUp className="h-3 w-3" />
                               </Button>
-                              <Button variant="ghost" size="sm" className="p-1 h-6 w-6 hover:bg-gray-100 dark:hover:bg-gray-600">
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className={`p-1 h-6 w-6 hover:bg-gray-100 dark:hover:bg-gray-600 ${
+                                  dislikedMessages.has(message.id) ? 'text-red-600' : ''
+                                }`}
+                                onClick={() => handleDislikeMessage(message.id)}
+                                title="Dislike this response"
+                              >
                                 <ThumbsDown className="h-3 w-3" />
                               </Button>
                             </div>
