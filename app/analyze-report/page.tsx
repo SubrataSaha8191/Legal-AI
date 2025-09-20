@@ -114,34 +114,37 @@ export default function AnalyzeReportPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Background Effects */}
+    <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      {/* Modern Background Pattern */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -inset-10 opacity-50">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
-          <div className="absolute bottom-1/4 left-1/2 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-500"></div>
+        <div className="absolute inset-0 opacity-50">
+          <div className="absolute top-0 left-1/4 w-72 h-72 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-purple-500/15 to-pink-600/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br from-indigo-500/10 to-blue-600/10 rounded-full blur-3xl animate-pulse delay-500"></div>
         </div>
       </div>
 
       {/* Header */}
       <motion.header
-        className="glass-header relative z-10 backdrop-blur-xl bg-white/5 border-b border-white/10"
+        className="relative z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200 dark:border-gray-700 shadow-lg"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-white/10">
-              <Scale className="h-6 w-6 text-primary" />
+        <div className="container mx-auto px-4 py-6 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="p-3 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 shadow-lg shadow-blue-500/25">
+              <Scale className="h-7 w-7 text-white" />
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-blue-600 bg-clip-text text-transparent">LegalAI</span>
+            <div>
+              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 bg-clip-text text-transparent">LegalAI</span>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Document Analysis</p>
+            </div>
           </div>
           
           <Link 
             href="/"
-            className="inline-flex items-center text-white/60 hover:text-white transition-colors"
+            className="inline-flex items-center px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors shadow-sm"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Home
@@ -158,39 +161,50 @@ export default function AnalyzeReportPage() {
           animate="animate"
         >
           {/* Page Header */}
-          <motion.div className="text-center mb-12" variants={fadeInUp}>
-            <Badge variant="secondary" className="mb-6 glass-card bg-gradient-to-r from-blue-500/10 to-purple-600/10 backdrop-blur-sm text-white border border-white/20">
-              <FileText className="h-4 w-4 mr-2" />
-              Legal Document Analysis
+          <motion.div className="text-center mb-16" variants={fadeInUp}>
+            <Badge variant="secondary" className="mb-6 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 px-4 py-2 shadow-sm">
+              <FileText className="h-5 w-5 mr-2" />
+              Professional Legal Analysis
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Analyze Your Legal Documents
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-8 leading-tight">
+              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 bg-clip-text text-transparent">
+                Analyze & Transform
+              </span>
+              <br />
+              Legal Documents
             </h1>
-            <p className="text-xl text-white/60 max-w-2xl mx-auto">
-              Upload your PDF documents and let our AI analyze them for insights, compliance, and recommendations.
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              Upload your legal documents and receive comprehensive AI-powered analysis with insights, 
+              compliance checks, and actionable recommendations in minutes.
             </p>
           </motion.div>
 
           {/* Upload Section */}
           <motion.div variants={fadeInUp}>
-            <Card className="glass-card bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl">
-              <CardHeader>
-                <CardTitle className="text-2xl text-white flex items-center">
-                  <Upload className="h-6 w-6 mr-3" />
-                  Upload Legal Documents
-                </CardTitle>
-                <CardDescription className="text-white/60">
-                  Drag and drop PDF files or click to browse. Maximum file size: 10MB per file.
-                </CardDescription>
+            <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl border border-gray-200 dark:border-gray-700 shadow-2xl shadow-gray-900/10 dark:shadow-black/20 rounded-2xl">
+              <CardHeader className="pb-6">
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="p-3 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 shadow-lg shadow-blue-500/25">
+                    <Upload className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-2xl text-gray-900 dark:text-white font-bold">
+                      Upload Legal Documents
+                    </CardTitle>
+                    <CardDescription className="text-gray-600 dark:text-gray-300 text-base mt-1">
+                      Drag and drop PDF files or click to browse. Maximum file size: 10MB per file.
+                    </CardDescription>
+                  </div>
+                </div>
               </CardHeader>
               
               <CardContent>
                 {/* Upload Area */}
                 <div
-                  className={`relative border-2 border-dashed rounded-xl p-8 transition-all duration-300 ${
+                  className={`relative border-2 border-dashed rounded-xl p-12 transition-all duration-300 ${
                     dragActive
-                      ? "border-blue-400 bg-blue-500/10"
-                      : "border-white/20 bg-white/5 hover:border-white/30 hover:bg-white/10"
+                      ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 scale-[1.02] shadow-lg shadow-blue-500/25"
+                      : "border-gray-300 dark:border-gray-600 bg-gray-50/50 dark:bg-gray-800/50 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-900/10"
                   }`}
                   onDragEnter={handleDrag}
                   onDragLeave={handleDrag}
@@ -208,30 +222,31 @@ export default function AnalyzeReportPage() {
                   
                   <div className="text-center">
                     <motion.div
-                      className="mx-auto mb-4"
+                      className="mx-auto mb-6"
                       animate={{ 
                         scale: dragActive ? 1.1 : 1,
                         rotate: dragActive ? 5 : 0 
                       }}
                       transition={{ duration: 0.2 }}
                     >
-                      <div className="p-4 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-white/10 inline-block">
-                        <Cloud className="h-12 w-12 text-blue-400" />
+                      <div className="p-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 shadow-xl shadow-blue-500/25 inline-block">
+                        <Cloud className="h-16 w-16 text-white" />
                       </div>
                     </motion.div>
                     
-                    <h3 className="text-xl font-semibold text-white mb-2">
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
                       {dragActive ? "Drop your files here" : "Choose files or drag and drop"}
                     </h3>
-                    <p className="text-white/60 mb-4">
+                    <p className="text-gray-600 dark:text-gray-400 mb-6 text-lg">
                       PDF files only, up to 10MB each
                     </p>
                     
                     <Button 
                       variant="outline" 
-                      className="glass-card border-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-white"
+                      size="lg"
+                      className="border-2 border-blue-500 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold px-8 py-4 text-lg shadow-lg shadow-blue-500/10"
                     >
-                      <FileUp className="h-4 w-4 mr-2" />
+                      <FileUp className="h-5 w-5 mr-3" />
                       Browse Files
                     </Button>
                   </div>
@@ -239,18 +254,18 @@ export default function AnalyzeReportPage() {
 
                 {/* Status Messages */}
                 {uploadStatus === "error" && (
-                  <Alert className="mt-4 bg-red-500/10 border-red-500/50 text-red-400">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>
+                  <Alert className="mt-6 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 shadow-lg">
+                    <AlertCircle className="h-5 w-5 text-red-500" />
+                    <AlertDescription className="text-base font-medium">
                       Please upload only PDF files. Some files were not added.
                     </AlertDescription>
                   </Alert>
                 )}
 
                 {uploadStatus === "success" && (
-                  <Alert className="mt-4 bg-green-500/10 border-green-500/50 text-green-400">
-                    <CheckCircle className="h-4 w-4" />
-                    <AlertDescription>
+                  <Alert className="mt-6 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 shadow-lg">
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <AlertDescription className="text-base font-medium">
                       Files uploaded successfully! Analysis will begin shortly.
                     </AlertDescription>
                   </Alert>
@@ -258,54 +273,55 @@ export default function AnalyzeReportPage() {
 
                 {/* Uploaded Files List */}
                 {uploadedFiles.length > 0 && (
-                  <div className="mt-6">
-                    <h4 className="text-lg font-semibold text-white mb-4">Uploaded Files</h4>
-                    <div className="space-y-3">
+                  <div className="mt-8">
+                    <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Uploaded Files</h4>
+                    <div className="space-y-4">
                       {uploadedFiles.map((file, index) => (
                         <motion.div
                           key={index}
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1 }}
-                          className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10"
+                          className="flex items-center justify-between p-4 rounded-xl bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-md"
                         >
-                          <div className="flex items-center space-x-3">
-                            <div className="p-2 rounded bg-red-500/20">
-                              <FileText className="h-5 w-5 text-red-400" />
+                          <div className="flex items-center space-x-4">
+                            <div className="p-3 rounded-lg bg-red-100 dark:bg-red-900/20">
+                              <FileText className="h-6 w-6 text-red-600 dark:text-red-400" />
                             </div>
                             <div>
-                              <p className="text-white font-medium">{file.name}</p>
-                              <p className="text-white/60 text-sm">{formatFileSize(file.size)}</p>
+                              <p className="text-gray-900 dark:text-white font-semibold text-base">{file.name}</p>
+                              <p className="text-gray-600 dark:text-gray-400">{formatFileSize(file.size)}</p>
                             </div>
                           </div>
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => removeFile(index)}
-                            className="text-white/60 hover:text-red-400 hover:bg-red-500/10"
+                            className="text-gray-500 dark:text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 p-2"
                           >
-                            <X className="h-4 w-4" />
+                            <X className="h-5 w-5" />
                           </Button>
                         </motion.div>
                       ))}
                     </div>
 
                     {/* Upload Button */}
-                    <div className="mt-6 text-center">
+                    <div className="mt-8 text-center">
                       <Button
                         onClick={handleUpload}
                         disabled={uploading || uploadedFiles.length === 0}
-                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 shadow-lg shadow-blue-500/25"
+                        size="lg"
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold px-12 py-4 text-lg shadow-xl shadow-blue-500/25 hover:shadow-2xl hover:shadow-blue-500/30 transform hover:scale-105 transition-all duration-200"
                       >
                         {uploading ? (
                           <>
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                            Analyzing...
+                            <Loader2 className="h-5 w-5 mr-3 animate-spin" />
+                            Analyzing Documents...
                           </>
                         ) : (
                           <>
-                            <Upload className="h-4 w-4 mr-2" />
-                            Start Analysis
+                            <Upload className="h-5 w-5 mr-3" />
+                            Start Professional Analysis
                           </>
                         )}
                       </Button>
@@ -314,13 +330,28 @@ export default function AnalyzeReportPage() {
                 )}
 
                 {/* Instructions */}
-                <div className="mt-8 p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
-                  <h4 className="text-white font-semibold mb-2">What happens next?</h4>
-                  <ul className="text-white/80 text-sm space-y-1">
-                    <li>• Your documents will be securely processed by our AI</li>
-                    <li>• We'll extract key clauses and legal terms</li>
-                    <li>• You'll receive a detailed analysis report</li>
-                    <li>• All uploads are encrypted and automatically deleted after processing</li>
+                <div className="mt-10 p-6 rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-800 shadow-lg">
+                  <h4 className="text-gray-900 dark:text-white font-bold text-lg mb-4 flex items-center">
+                    <CheckCircle className="h-5 w-5 mr-2 text-blue-600" />
+                    What happens next?
+                  </h4>
+                  <ul className="text-gray-700 dark:text-gray-300 space-y-2 text-base">
+                    <li className="flex items-start">
+                      <span className="text-blue-600 mr-2 font-bold">•</span>
+                      Your documents will be securely processed by our advanced AI
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-purple-600 mr-2 font-bold">•</span>
+                      We'll extract key clauses, terms, and legal provisions
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-600 mr-2 font-bold">•</span>
+                      You'll receive a comprehensive analysis report with insights
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-orange-600 mr-2 font-bold">•</span>
+                      All uploads are encrypted and automatically deleted after processing
+                    </li>
                   </ul>
                 </div>
               </CardContent>
