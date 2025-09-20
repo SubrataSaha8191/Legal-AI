@@ -73,23 +73,20 @@ export default function LegalAILanding() {
           </div>
           <nav className="hidden md:flex items-center space-x-8">
             <Link
-              href="/clause-simplification"
+              href="/analyze-report"
               className="text-white/80 hover:text-white transition-colors font-medium"
             >
-              Simplification
+              Analyze Report
             </Link>
-            <Link href="/clause-extraction" className="text-white/80 hover:text-white transition-colors font-medium">
-              Extraction
+            <Link href="/dashboard" className="text-white/80 hover:text-white transition-colors font-medium">
+              Dashboard
             </Link>
             <Link
-              href="/document-classification"
+              href="/chatbot"
               className="text-white/80 hover:text-white transition-colors font-medium"
             >
-              Classification
+              Chatbot
             </Link>
-            <a href="#about" className="text-white/80 hover:text-white transition-colors font-medium">
-              About
-            </a>
           </nav>
           <div className="hidden md:flex items-center space-x-3">
             {user ? (
