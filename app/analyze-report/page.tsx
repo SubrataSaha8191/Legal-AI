@@ -298,6 +298,7 @@ export default function AnalyzeReportPage() {
             <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-white/10">
               <Scale className="h-6 w-6 text-primary" />
             </div>
+            <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-blue-600 bg-clip-text text-transparent">LegalAI</span>
           </div>
           
           <Link 
@@ -318,12 +319,8 @@ export default function AnalyzeReportPage() {
               <FileText className="h-4 w-4 mr-2" />
               Legal Document Analysis
             </Badge>
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-8 leading-tight">
-              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 bg-clip-text text-transparent">
-                Analyze & Transform
-              </span>
-              <br />
-              Legal Documents
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Analyze Your Legal Documents
             </h1>
             <p className="text-xl text-white/60 max-w-3xl mx-auto">
               Upload your PDF or DOCX documents and get comprehensive analysis including clause simplification, document classification, and entity extraction.
@@ -346,10 +343,10 @@ export default function AnalyzeReportPage() {
               <CardContent>
                 {/* Upload Area */}
                 <div
-                  className={`relative border-2 border-dashed rounded-xl p-12 transition-all duration-300 ${
+                  className={`relative border-2 border-dashed rounded-xl p-8 transition-all duration-300 ${
                     dragActive
-                      ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 scale-[1.02] shadow-lg shadow-blue-500/25"
-                      : "border-gray-300 dark:border-gray-600 bg-gray-50/50 dark:bg-gray-800/50 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-900/10"
+                      ? "border-blue-400 bg-blue-500/10"
+                      : "border-white/20 bg-white/5 hover:border-white/30 hover:bg-white/10"
                   }`}
                   onDragEnter={handleDrag}
                   onDragLeave={handleDrag}
@@ -380,8 +377,7 @@ export default function AnalyzeReportPage() {
                     
                     <Button 
                       variant="outline" 
-                      size="lg"
-                      className="border-2 border-blue-500 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold px-8 py-4 text-lg shadow-lg shadow-blue-500/10"
+                      className="glass-card border-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-white"
                     >
                       <FileText className="h-4 w-4 mr-2" />
                       Browse Files
@@ -444,8 +440,8 @@ export default function AnalyzeReportPage() {
                       >
                         {analyzing ? (
                           <>
-                            <Loader2 className="h-5 w-5 mr-3 animate-spin" />
-                            Analyzing Documents...
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Analyzing...
                           </>
                         ) : (
                           <>

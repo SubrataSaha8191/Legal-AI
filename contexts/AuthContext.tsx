@@ -9,7 +9,7 @@ import {
   signOut,
   updateProfile
 } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, firebaseEnabled } from '@/lib/firebase';
 
 interface AuthContextType {
   user: User | null;
@@ -40,16 +40,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!firebaseEnabled || !auth) {
+      // Skip wiring auth when Firebase is not configured
+      setLoading(false);
+      return () => {};
+    }
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
     });
-
     return unsubscribe;
   }, []);
 
   const signUp = async (email: string, password: string, displayName?: string) => {
     try {
+      if (!firebaseEnabled || !auth) throw new Error('Auth is disabled');
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       if (displayName && userCredential.user) {
         await updateProfile(userCredential.user, { displayName });
@@ -62,6 +67,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signIn = async (email: string, password: string) => {
     try {
+      if (!firebaseEnabled || !auth) throw new Error('Auth is disabled');
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       console.error('Error signing in:', error);
@@ -71,6 +77,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = async () => {
     try {
+      if (!firebaseEnabled || !auth) return;
       await signOut(auth);
     } catch (error) {
       console.error('Error signing out:', error);

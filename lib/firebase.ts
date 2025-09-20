@@ -28,26 +28,20 @@ function assertConfig(cfg: Record<string, any>) {
 }
 assertConfig(firebaseConfig);
 
-// Prevent initialization if required keys missing to avoid cryptic runtime errors
+// Optional initialization: allow app to run without Firebase in local/dev if env missing
 const requiredKeys = ['apiKey','authDomain','projectId','appId'];
 const missingReq = requiredKeys.filter(k => !(firebaseConfig as any)[k]);
-if (missingReq.length) {
-  const msg = `[firebase] Missing required config values: ${missingReq.join(', ')}. Did you create a .env.local with NEXT_PUBLIC_FIREBASE_* variables and restart the dev server?`;
-  if (process.env.NODE_ENV !== 'production') {
-    // eslint-disable-next-line no-console
-    console.error(msg);
-  }
-  throw new Error(msg);
-}
+export const firebaseEnabled = missingReq.length === 0;
 
-// Initialize (singleton pattern to avoid duplicate apps in dev hot reload)
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+// Initialize only when enabled (singleton pattern to avoid duplicate apps in dev hot reload)
+const app = firebaseEnabled ? (!getApps().length ? initializeApp(firebaseConfig) : getApp()) : undefined as any;
 
-export const auth = getAuth(app);
+// Export auth (undefined when disabled)
+export const auth = firebaseEnabled ? getAuth(app) : undefined as any;
 
-// Lazy analytics: only if supported & client side
+// Lazy analytics: only if supported & client side and firebase is enabled
 let analytics: ReturnType<typeof getAnalytics> | undefined;
-if (typeof window !== 'undefined') {
+if (firebaseEnabled && typeof window !== 'undefined') {
   isSupported().then(supported => {
     if (supported) {
       analytics = getAnalytics(app);
