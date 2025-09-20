@@ -83,6 +83,12 @@ export default function LegalAILanding() {
             >
               Chatbot
             </Link>
+            <Link
+              href="/search-learn"
+              className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors font-medium"
+            >
+              Search & Learn
+            </Link>
           </nav>
           <div className="hidden md:flex items-center space-x-3">
             {user ? (

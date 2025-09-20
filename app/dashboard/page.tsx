@@ -251,7 +251,7 @@ export default function DashboardPage() {
                     <CardDescription className="text-gray-600 dark:text-gray-400">Start your next analysis</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       <Link href="/clause-simplification">
                         <div className="p-6 rounded-xl border-2 border-dashed border-blue-300 dark:border-blue-600 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all cursor-pointer group">
                           <Brain className="h-8 w-8 text-blue-600 dark:text-blue-400 mb-3 group-hover:scale-110 transition-transform" />
@@ -265,6 +265,14 @@ export default function DashboardPage() {
                           <FileText className="h-8 w-8 text-green-600 dark:text-green-400 mb-3 group-hover:scale-110 transition-transform" />
                           <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Document Classification</h3>
                           <p className="text-sm text-gray-600 dark:text-gray-400">Classify document types</p>
+                        </div>
+                      </Link>
+
+                      <Link href="/search-learn">
+                        <div className="p-6 rounded-xl border-2 border-dashed border-purple-300 dark:border-purple-600 hover:border-purple-500 dark:hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/10 transition-all cursor-pointer group">
+                          <Zap className="h-8 w-8 text-purple-600 dark:text-purple-400 mb-3 group-hover:scale-110 transition-transform" />
+                          <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Search & Learn</h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">AI-powered learning with mock tests</p>
                         </div>
                       </Link>
                     </div>

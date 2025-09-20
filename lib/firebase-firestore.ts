@@ -1,8 +1,7 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 import { getAnalytics, isSupported } from "firebase/analytics";
-import { getDatabase } from "firebase/database";
 
 // Build config from environment variables (NEXT_PUBLIC_* are exposed to browser in Next.js)
 const firebaseConfig = {
@@ -13,7 +12,6 @@ const firebaseConfig = {
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
-  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || `https://${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}-default-rtdb.firebaseio.com/`,
 };
 
 // Guard against missing env vars in development
@@ -23,7 +21,6 @@ function assertConfig(cfg: Record<string, any>) {
       .filter(([, v]) => !v)
       .map(([k]) => k);
     if (missing.length) {
-      // eslint-disable-next-line no-console
       console.warn("[firebase] Missing environment variables:", missing.join(", "));
     }
   }
@@ -41,8 +38,8 @@ const app = firebaseEnabled ? (!getApps().length ? initializeApp(firebaseConfig)
 // Export auth (undefined when disabled)
 export const auth = firebaseEnabled ? getAuth(app) : undefined as any;
 
-// Export database (undefined when disabled)
-export const database = firebaseEnabled ? getDatabase(app) : undefined as any;
+// Export firestore (undefined when disabled)
+export const firestore = firebaseEnabled ? getFirestore(app) : undefined as any;
 
 // Lazy analytics: only if supported & client side and firebase is enabled
 let analytics: ReturnType<typeof getAnalytics> | undefined;
