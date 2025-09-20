@@ -358,7 +358,7 @@ export default function SignUpPage() {
               <div className="text-center">
                 <Link 
                   href="/sign-in" 
-                  className="inline-flex items-center px-6 py-3 border-2 border-blue-600 text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white transition-all duration-200 rounded-lg font-semibold"
+                  className="inline-flex items-center px-6 py-3 border-2 border-blue-600 text-blue-600 dark:text-blue-400 hover:bg-black hover:text-white hover:border-black dark:hover:bg-black dark:hover:text-white dark:hover:border-black transition-all duration-200 rounded-lg font-semibold"
                 >
                   Sign In to Your Account
                 </Link>
