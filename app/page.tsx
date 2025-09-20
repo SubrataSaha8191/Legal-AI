@@ -104,14 +104,14 @@ export default function LegalAILanding() {
                 <Link href="/sign-up">
                   <Button 
                     variant="outline" 
-                    className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-black hover:text-white hover:border-black dark:hover:bg-black dark:hover:text-white dark:hover:border-black text-gray-900 dark:text-gray-100 transition-all duration-200"
                   >
                     <UserPlus className="h-4 w-4 mr-2" />
                     Sign Up
                   </Button>
                 </Link>
                 <Link href="/sign-in">
-                  <Button variant="outline" className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100">
+                  <Button variant="outline" className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-black hover:text-white hover:border-black dark:hover:bg-black dark:hover:text-white dark:hover:border-black text-gray-900 dark:text-gray-100 transition-all duration-200">
                     Sign In
                   </Button>
                 </Link>
