@@ -23,8 +23,6 @@ import {
   MoreVertical
 } from "lucide-react";
 import Link from "next/link";
-import { ResponseHighlights } from "@/components/ui/highlight-box";
-import { parseGeminiResponse, FormattedResponse } from "@/lib/gemini-utils";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -38,10 +36,6 @@ interface Message {
   sender: 'user' | 'bot';
   timestamp: Date;
   type?: 'text' | 'suggestion';
-  highlights?: Array<{
-    type: 'important' | 'benefit' | 'warning' | 'action';
-    text: string;
-  }>;
 }
 
 const quickSuggestions = [
@@ -57,19 +51,9 @@ export default function ChatbotPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: "Hello! I'm your Legal AI Assistant powered by Gemini 2.5 Flash. I can help you understand legal documents, explain legal terms, and provide guidance on various legal matters. How can I assist you today?",
+      content: "Hello! I'm your Legal AI Assistant. I can help you understand legal documents, explain legal terms, and provide guidance on various legal matters. How can I assist you today?",
       sender: 'bot',
-      timestamp: new Date(),
-      highlights: [
-        {
-          type: 'important',
-          text: 'I use advanced AI to provide comprehensive legal information and analysis.'
-        },
-        {
-          type: 'benefit',
-          text: 'Get instant answers to complex legal questions with structured, easy-to-understand responses.'
-        }
-      ]
+      timestamp: new Date()
     }
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -98,52 +82,38 @@ export default function ChatbotPage() {
     setInputValue('');
     setIsTyping(true);
 
-    try {
-      // Call Gemini API
-      const response = await fetch('/api/gemini', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: content }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to get response from AI');
-      }
-
-      const data = await response.json();
-      const formattedResponse = parseGeminiResponse(data.response);
-
+    setTimeout(() => {
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
-        content: formattedResponse.content,
+        content: generateResponse(content),
         sender: 'bot',
-        timestamp: new Date(),
-        highlights: formattedResponse.highlights
+        timestamp: new Date()
       };
-
       setMessages(prev => [...prev, botResponse]);
-    } catch (error) {
-      console.error('Error calling Gemini API:', error);
-      
-      // Fallback response
-      const errorResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        content: "I apologize, but I'm having trouble connecting to my AI service right now. Please try again in a moment, or rephrase your question.",
-        sender: 'bot',
-        timestamp: new Date(),
-        highlights: [
-          {
-            type: 'warning',
-            text: 'Temporary service interruption - please try again shortly.'
-          }
-        ]
-      };
-      setMessages(prev => [...prev, errorResponse]);
-    } finally {
       setIsTyping(false);
+    }, 1500);
+  };
+
+  const generateResponse = (userInput: string): string => {
+    const lowerInput = userInput.toLowerCase();
+    
+    if (lowerInput.includes('nda') || lowerInput.includes('non-disclosure')) {
+      return "A Non-Disclosure Agreement (NDA) is a legal contract that establishes confidentiality between parties. It prevents the sharing of confidential information and typically includes: 1) Definition of confidential information, 2) Obligations of the receiving party, 3) Duration of confidentiality, 4) Exceptions to confidentiality, and 5) Consequences of breach. NDAs are commonly used in business partnerships, employment relationships, and when sharing sensitive business information.";
     }
+    
+    if (lowerInput.includes('contract') || lowerInput.includes('agreement')) {
+      return "A contract is a legally binding agreement between parties that contains essential elements: 1) Offer and acceptance, 2) Consideration (exchange of value), 3) Legal capacity of parties, 4) Legal purpose, and 5) Mutual assent. Key contract terms typically include scope of work, payment terms, duration, termination clauses, and dispute resolution mechanisms. Always ensure contracts are clear, specific, and reviewed by legal counsel when dealing with significant transactions.";
+    }
+    
+    if (lowerInput.includes('employment') || lowerInput.includes('job')) {
+      return "Employment contracts typically include: 1) Job description and responsibilities, 2) Compensation and benefits, 3) Work schedule and location, 4) Confidentiality and non-compete clauses, 5) Termination procedures, 6) Intellectual property ownership, and 7) Dispute resolution. Important considerations include at-will employment status, severance terms, and compliance with labor laws. Review these carefully before signing.";
+    }
+    
+    if (lowerInput.includes('lease') || lowerInput.includes('rent')) {
+      return "Lease agreements should include: 1) Property description and permitted use, 2) Lease term and renewal options, 3) Rent amount and payment schedule, 4) Security deposit terms, 5) Maintenance responsibilities, 6) Restrictions and rules, 7) Termination conditions, and 8) Default remedies. Pay attention to escalation clauses, subletting rights, and early termination penalties.";
+    }
+    
+    return "Thank you for your question about legal matters. Based on your query, I recommend: 1) Consulting relevant legal documentation, 2) Reviewing applicable laws and regulations, 3) Considering the specific context of your situation, and 4) Seeking professional legal advice for complex matters. Legal issues often require careful analysis of specific facts and circumstances. Would you like me to elaborate on any particular aspect?";
   };
 
   const handleSuggestionClick = (suggestion: string) => {
@@ -173,7 +143,7 @@ export default function ChatbotPage() {
               </div>
               <div>
                 <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 bg-clip-text text-transparent">LegalAI</span>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Powered by Gemini 2.5 Flash</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Legal Assistant</p>
               </div>
             </div>
             
@@ -230,11 +200,6 @@ export default function ChatbotPage() {
                             : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white'
                         }`}>
                           <p className="text-base leading-relaxed whitespace-pre-wrap">{message.content}</p>
-                          
-                          {/* Enhanced Highlights for bot messages */}
-                          {message.sender === 'bot' && message.highlights && message.highlights.length > 0 && (
-                            <ResponseHighlights highlights={message.highlights} />
-                          )}
                         </div>
                         
                         <div className={`flex items-center mt-2 space-x-2 ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
@@ -351,7 +316,7 @@ export default function ChatbotPage() {
                 <div className="flex items-center space-x-4 text-xs text-gray-500 dark:text-gray-400">
                   <div className="flex items-center space-x-1">
                     <Sparkles className="h-3 w-3" />
-                    <span>Gemini 2.5 Flash</span>
+                    <span>AI-powered</span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <Shield className="h-3 w-3" />

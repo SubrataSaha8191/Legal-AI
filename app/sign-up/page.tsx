@@ -82,7 +82,7 @@ export default function SignUpPage() {
     try {
       const displayName = `${formData.firstName.trim()} ${formData.lastName.trim()}`;
       await signUp(formData.email, formData.password, displayName);
-      router.push("/"); // Redirect to home page after successful signup
+  router.push("/");
     } catch (error: any) {
       console.error("Signup error:", error);
       if (error.code === 'auth/email-already-in-use') {
@@ -99,7 +99,7 @@ export default function SignUpPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 flex items-center justify-center p-4">
-      {/* Premium Background */}
+      
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-br from-purple-500/20 to-pink-600/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
@@ -111,7 +111,7 @@ export default function SignUpPage() {
         className="relative z-10 w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center"
         {...fadeInUp}
       >
-        {/* Left Side - Branding */}
+        
         <div className="hidden lg:flex flex-col justify-center space-y-8 pr-8">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -167,14 +167,14 @@ export default function SignUpPage() {
           </motion.div>
         </div>
 
-        {/* Right Side - Sign Up Form */}
+        
         <motion.div
           className="w-full max-w-md mx-auto lg:max-w-none"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          {/* Mobile Header */}
+          
           <div className="lg:hidden text-center mb-8">
             <div className="flex items-center justify-center space-x-3 mb-6">
               <div className="p-3 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 shadow-lg shadow-blue-500/25">
@@ -194,7 +194,7 @@ export default function SignUpPage() {
             </Link>
           </div>
 
-          {/* Sign Up Card */}
+          
           <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl border border-gray-200 dark:border-gray-700 shadow-2xl shadow-gray-900/10 dark:shadow-black/20 rounded-2xl">
             <CardHeader className="text-center pb-6">
               <div className="hidden lg:flex justify-end mb-4">

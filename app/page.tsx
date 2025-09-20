@@ -25,7 +25,6 @@ import { motion } from "framer-motion"
 import { useAuth } from "@/contexts/AuthContext"
 import ThreeBubbles from "@/components/ThreeBubbles"
 
-// Animation variants
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
@@ -53,7 +52,7 @@ export default function LegalAILanding() {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 relative">
       <ThreeBubbles />
-      {/* Header */}
+      
       <motion.header
         className="glass-header relative z-10 professional-shadow"
         initial={{ opacity: 0, y: -20 }}
@@ -121,7 +120,7 @@ export default function LegalAILanding() {
         </div>
       </motion.header>
 
-      {/* Hero Section */}
+      
       <section className="py-20 px-4 relative z-10 min-h-screen flex items-center">
         <div className="container mx-auto text-center">
           <motion.div {...fadeInUp}>
@@ -190,7 +189,7 @@ export default function LegalAILanding() {
         </div>
       </section>
 
-      {/* Features Section */}
+      
       <section id="features" className="py-20 px-4 relative z-10">
         <div className="container mx-auto">
           <motion.div
@@ -306,7 +305,7 @@ export default function LegalAILanding() {
         </div>
       </section>
 
-      {/* How It Works */}
+      
       <section id="how-it-works" className="py-20 px-4 relative z-10">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-600/5 backdrop-blur-sm"></div>
         <div className="container mx-auto relative z-10">
@@ -363,7 +362,7 @@ export default function LegalAILanding() {
         </div>
       </section>
 
-      {/* Benefits Section */}
+      
       <section className="py-20 px-4 relative z-10">
         <div className="container mx-auto">
           <div className="flex flex-col items-center justify-center text-center">
@@ -417,7 +416,7 @@ export default function LegalAILanding() {
         </div>
       </section>
 
-      {/* Footer */}
+      
       <footer className="border-t border-gray-200 dark:border-gray-700 py-12 px-4 bg-gray-50 dark:bg-gray-900 relative z-10">
         <div className="container mx-auto">
           <div className="grid md:grid-cols-4 gap-8">

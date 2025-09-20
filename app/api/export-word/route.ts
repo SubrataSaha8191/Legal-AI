@@ -30,8 +30,9 @@ export async function POST(request: NextRequest) {
 
     const { results } = data;
 
-    const ACCENT = '2F80ED';
-    const LIGHT = 'EAF2FD';
+  const ACCENT = '2F80ED';
+  const LIGHT = 'EAF2FD';
+  const ZEBRA = 'F5F9FE';
 
     const divider = new Paragraph({
       border: {
@@ -50,16 +51,17 @@ export async function POST(request: NextRequest) {
         shading: { type: ShadingType.CLEAR, fill: LIGHT, color: 'auto' },
       });
 
-    const valueCell = (text: string) =>
+    const valueCell = (text: string, zebra?: boolean) =>
       new TableCell({
         children: [new Paragraph(String(text ?? ''))],
+        shading: zebra ? { type: ShadingType.CLEAR, fill: ZEBRA, color: 'auto' } : undefined,
       });
 
     const keyValueTable = (rows: Array<[string, string | number]>) =>
       new Table({
         width: { size: 100, type: WidthType.PERCENTAGE },
-        rows: rows.map(([k, v]) =>
-          new TableRow({ children: [labelCell(k), valueCell(String(v ?? ''))] })
+        rows: rows.map(([k, v], i) =>
+          new TableRow({ children: [labelCell(k), valueCell(String(v ?? ''), i % 2 === 0)] })
         ),
       });
 
@@ -81,7 +83,7 @@ export async function POST(request: NextRequest) {
           }),
           new TableRow({
             children: [
-              new TableCell({ children: [new Paragraph(String(leftText || ''))] }),
+              new TableCell({ children: [new Paragraph(String(leftText || ''))], shading: { type: ShadingType.CLEAR, fill: ZEBRA, color: 'auto' } }),
               new TableCell({ children: [new Paragraph(String(rightText || ''))] }),
             ],
           }),
@@ -146,6 +148,13 @@ export async function POST(request: NextRequest) {
               alignment: AlignmentType.CENTER,
             }),
             new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({ text: 'Comprehensive AI-Powered Review', italics: true, color: ACCENT }),
+              ],
+              spacing: { after: 120 },
+            }),
+            new Paragraph({
               text: `Generated: ${new Date().toLocaleString()}`,
               alignment: AlignmentType.CENTER,
               spacing: { after: 300 },
@@ -177,9 +186,9 @@ export async function POST(request: NextRequest) {
                 new TableRow({
                   children: [labelCell('Keyword'), labelCell('Count')],
                 }),
-                ...((results.classification?.detected_keywords || []).map((k: any) =>
+                ...((results.classification?.detected_keywords || []).map((k: any, i: number) =>
                   new TableRow({
-                    children: [valueCell(k.keyword), valueCell(String(k.count))],
+                    children: [valueCell(k.keyword, i % 2 === 0), valueCell(String(k.count), i % 2 === 0)],
                   })
                 )),
               ],
@@ -207,9 +216,9 @@ export async function POST(request: NextRequest) {
               width: { size: 100, type: WidthType.PERCENTAGE },
               rows: [
                 new TableRow({ children: [labelCell('Name'), labelCell('Confidence')] }),
-                ...((results.entities?.persons || []).map((p: any) =>
+                ...((results.entities?.persons || []).map((p: any, i: number) =>
                   new TableRow({
-                    children: [valueCell(p.text), valueCell(`${(p.confidence * 100).toFixed(1)}%`)],
+                    children: [valueCell(p.text, i % 2 === 0), valueCell(`${(p.confidence * 100).toFixed(1)}%`, i % 2 === 0)],
                   })
                 )),
               ],
@@ -220,8 +229,8 @@ export async function POST(request: NextRequest) {
               rows: [
                 new TableRow({ children: [labelCell('Date')] }),
                 ...((results.entities?.dates || []).length > 0
-                  ? (results.entities?.dates || []).map((d: any) =>
-                      new TableRow({ children: [valueCell(typeof d === 'string' ? d : (d?.text || String(d)))] })
+                  ? (results.entities?.dates || []).map((d: any, i: number) =>
+                      new TableRow({ children: [valueCell(typeof d === 'string' ? d : (d?.text || String(d)), i % 2 === 0)] })
                     )
                   : [new TableRow({ children: [valueCell('None found')] })]
                 ),
@@ -240,6 +249,10 @@ export async function POST(request: NextRequest) {
                 ['Complexity Reduction', `${clause.complexity_reduction || 0}%`],
               ]),
               twoColTextTable('Original Text', clause.original || clause.text || '', 'Simplified Text', clause.simplified || ''),
+              new Paragraph({
+                border: { bottom: { color: LIGHT, size: 4, style: BorderStyle.SINGLE } },
+                spacing: { after: 120, before: 120 },
+              }),
             ])),
           ],
         },
