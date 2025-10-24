@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export const runtime = "nodejs20.x"; // Ensure Node.js runtime
+export const runtime = "nodejs"; // Ensure Node.js runtime
 
 export async function POST(request: NextRequest) {
   try {

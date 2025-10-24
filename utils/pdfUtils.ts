@@ -1,5 +1,5 @@
 // ✅ Force Node.js runtime in Next.js
-export const runtime = "nodejs20.x";
+export const runtime = "nodejs";
 
 import { readFile } from "fs/promises";
 import path from "path";
