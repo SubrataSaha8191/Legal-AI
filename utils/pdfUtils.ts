@@ -46,21 +46,7 @@ export async function extractTextFromPDF(fileUrl: string): Promise<string> {
     throw new Error(`Error loading PDF: ${error.message}`);
   }
 
-  // 🧩 2️⃣ Try parsing using pdf-parse (Node.js native)
-  try {
-    const pdfParseModule = await import("pdf-parse");
-    const pdfParse = pdfParseModule.default || pdfParseModule;
-    const parsed = await pdfParse(pdfBuffer);
-
-    if (parsed?.text) {
-      console.log("[pdfUtils] ✅ Parsed PDF successfully using pdf-parse");
-      return parsed.text;
-    }
-  } catch (error: any) {
-    console.warn("[pdfUtils] pdf-parse failed:", error.message);
-  }
-
-  // 🧩 3️⃣ Fallback: use pdfjs-dist
+  // 🧩 2️⃣ Try parsing using pdfjs-dist FIRST (works better in serverless/Vercel)
   try {
     const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
 
@@ -75,14 +61,33 @@ export async function extractTextFromPDF(fileUrl: string): Promise<string> {
       text += pageText + "\n";
     }
 
-    console.log("[pdfUtils] ✅ Parsed PDF successfully using pdfjs-dist");
-    return text.trim();
+    const extractedText = text.trim();
+    if (extractedText && extractedText.length > 0) {
+      console.log(`[pdfUtils] ✅ Parsed PDF successfully using pdfjs-dist (${extractedText.length} chars)`);
+      return extractedText;
+    } else {
+      console.warn("[pdfUtils] pdfjs-dist returned empty text");
+    }
   } catch (error: any) {
-    console.error("[pdfUtils] pdfjs-dist failed:", error.message);
+    console.error("[pdfUtils] pdfjs-dist failed:", error.message, error.stack);
   }
 
-  // 🧩 4️⃣ If both fail
-  throw new Error(
-    "Unable to load a PDF parsing library (pdf-parse/pdfjs-dist). Ensure dependencies are installed and server restarted."
-  );
+  // 🧩 3️⃣ Fallback: use pdf-parse (requires canvas, may fail in serverless)
+  try {
+    const pdfParseModule = await import("pdf-parse");
+    const pdfParse = pdfParseModule.default || pdfParseModule;
+    const parsed = await pdfParse(pdfBuffer);
+
+    if (parsed?.text && parsed.text.trim().length > 0) {
+      console.log(`[pdfUtils] ✅ Parsed PDF successfully using pdf-parse (${parsed.text.length} chars)`);
+      return parsed.text.trim();
+    }
+  } catch (error: any) {
+    console.warn("[pdfUtils] pdf-parse failed (expected in serverless):", error.message);
+  }
+
+  // 🧩 4️⃣ If both fail, provide detailed error
+  const errorMsg = `Unable to extract text from PDF. Both pdfjs-dist and pdf-parse failed. File: ${fileUrl}`;
+  console.error(`[pdfUtils] ${errorMsg}`);
+  throw new Error(errorMsg);
 }

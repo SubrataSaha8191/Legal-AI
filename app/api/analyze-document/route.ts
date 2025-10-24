@@ -68,7 +68,30 @@ export async function POST(req: Request) {
           // Step 1: Extract raw text to get document info
           controller.enqueue(sseJson({ step: "uploading", status: "completed", message: "File uploaded" }));
 
-          const rawText = await extractTextFromPDF(fileUrl);
+          let rawText;
+          try {
+            rawText = await extractTextFromPDF(fileUrl);
+            console.log(`[analyze-document] ✅ Extracted ${rawText.length} chars from ${filename}`);
+          } catch (pdfError: any) {
+            console.error(`[analyze-document] ❌ PDF extraction failed for ${filename}:`, pdfError.message);
+            controller.enqueue(sseJson({ 
+              step: "error", 
+              status: "failed", 
+              message: `${filename}: Failed to extract text from PDF. ${pdfError.message}` 
+            }));
+            return;
+          }
+
+          if (!rawText || rawText.length === 0) {
+            console.error(`[analyze-document] ❌ Empty text extracted from ${filename}`);
+            controller.enqueue(sseJson({ 
+              step: "error", 
+              status: "failed", 
+              message: `${filename}: PDF appears to be empty or contains only images` 
+            }));
+            return;
+          }
+
           const wordCount = rawText.split(/\s+/).length;
           const charCount = rawText.length;
           const estimatedPages = Math.ceil(charCount / 2000); // rough estimate
@@ -161,7 +184,32 @@ export async function POST(req: Request) {
 
   // Fallback: non-streaming (existing behavior)
   try {
-    const rawText = await extractTextFromPDF(fileUrl);
+    let rawText;
+    try {
+      rawText = await extractTextFromPDF(fileUrl);
+      console.log(`[analyze-document] ✅ Extracted ${rawText.length} chars from ${filename}`);
+    } catch (pdfError: any) {
+      console.error(`[analyze-document] ❌ PDF extraction failed for ${filename}:`, pdfError.message);
+      return NextResponse.json(
+        {
+          success: false,
+          error: `${filename}: Failed to extract text from PDF. ${pdfError.message}`,
+        },
+        { status: 500 }
+      );
+    }
+
+    if (!rawText || rawText.length === 0) {
+      console.error(`[analyze-document] ❌ Empty text extracted from ${filename}`);
+      return NextResponse.json(
+        {
+          success: false,
+          error: `${filename}: PDF appears to be empty or contains only images`,
+        },
+        { status: 422 }
+      );
+    }
+
     const wordCount = rawText.split(/\s+/).length;
     const charCount = rawText.length;
     const estimatedPages = Math.ceil(charCount / 2000);
