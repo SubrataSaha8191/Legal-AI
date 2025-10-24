@@ -23,7 +23,6 @@
       ]
     }
   ],
-  "ignoreCommand": "echo 'No ignored files'",
   "rewrites": [
     {
       "source": "/api/(.*)",
