@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "target": "ES6",
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "ESNext",
+  "moduleResolution": "bundler",
+  // NOTE: `baseUrl` is deprecated and will be removed in a future TypeScript release (TS 7).
+  // We're keeping `baseUrl` for now to preserve IDE/module resolution. A webpack alias
+  // for `@` was added in `next.config.mjs` so build/runtime resolution does not rely
+  // solely on tsconfig paths. Plan: migrate off `baseUrl` before upgrading to TS 7. See
+  // https://aka.ms/ts6 for migration guidance.
+  "baseUrl": ".",
+  // Temporarily silence the deprecation warning until we migrate away from baseUrl.
+  "ignoreDeprecations": "6.0",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    
+    "types": ["node", "react", "react-dom", "next"]
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "types/**/*.d.ts"],
+  "exclude": ["node_modules"]
+}
