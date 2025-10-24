@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export const runtime = "nodejs"; // Ensure Node.js runtime
+export const runtime = "nodejs20.x"; // Ensure Node.js runtime
 
 // NOTE: We import the Gemini SDK dynamically so the codebase doesn't fail to compile
 // when the package is not installed in the developer's environment. This lets

@@ -6,7 +6,7 @@ import os from "os";
 import { extractTextFromPDF } from "@/services/textExtractionService";
 
 
-export const runtime = "nodejs";
+export const runtime = "nodejs20.x";
 
 import { extractClausesFromPDF } from "@/services/clauseExtractionService";
 import {

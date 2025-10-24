@@ -1,6 +1,6 @@
 // ✅ Force Node.js runtime in Next.js (needed for pdf-parse / fs APIs)
 // Use the generic "nodejs" runtime to be compatible with Vercel's supported runtimes
-export const runtime = "nodejs";
+export const runtime = "nodejs20.x";
 
 import { readFile } from "fs/promises";
 import path from "path";

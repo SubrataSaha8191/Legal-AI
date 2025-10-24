@@ -3,7 +3,7 @@ import { writeFile, mkdir, unlink } from "fs/promises";
 import path from "path";
 import { existsSync } from "fs";
 
-export const runtime = "nodejs"; // ensures Node runtime
+export const runtime = "nodejs20.x"; // ensures Node runtime
 
 export async function POST(req: Request) {
   try {

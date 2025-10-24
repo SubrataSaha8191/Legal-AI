@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export const runtime = "nodejs";
+export const runtime = "nodejs20.x";
 import {
   simplifyClauses,
   classifyClauses,

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export const runtime = "nodejs";
+export const runtime = "nodejs20.x";
 import { extractClausesFromPDF } from "@/services/clauseExtractionService";
 
 export async function POST(req: Request) {
